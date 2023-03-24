@@ -1,0 +1,49 @@
+# версия docker-compose
+version: '3.1'
+
+# Создаем общую сеть deafult для всех контейнеров
+networks:
+  default:
+    driver: bridge
+
+# Создаем отдельные контейнеры
+services:
+  # Контейнер с веб-приложением
+  app:
+    # Собираем из Dockerfile
+    build:
+      # Корнем указываем корень основного проекта
+      context: ../
+      dockerfile: ./docker/Dockerfile
+    # Показываем наружу 80 порт
+    ports:
+      - "80:80"
+    # Подключаем к общей сети с другими контейнерами
+    networks:
+      - default
+    # Запускаем только после db
+    depends_on:
+      - db
+    # Линкуем внешнюю папку с исходниками внутрь
+    volumes:
+      - "../app:/home/ilya/testtask/app"
+      # Так же линкуем конфиг для nginx
+      - "./conf/nginx:/etc/nginx/sites-available"
+  # Контейнер с базой данных
+  db:
+    image: postgres:13.3
+    # Подключаем к общей сети с другими контейнерами
+    networks:
+      - default
+    # Показываем наружу порт
+    ports:
+      - "5432:5432"
+    # Задаем параметры для инициализации БД
+    environment:
+      # Создаваемая по умолчанию бд
+      POSTGRES_DB: yii-template-db
+      POSTGRES_USER: "root"
+      POSTGRES_PASSWORD: "root"
+    # Линкуем внешнюю папку для хранения БД
+    volumes:
+      - "./database:/var/lib/postgres/data"
