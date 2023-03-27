@@ -13,8 +13,8 @@ ADD docker/conf/nginx/site.conf /etc/nginx/sites-available/site.conf
 # The /run/nginx directory does not exist on the latest alpine containers.
 RUN mkdir -p /run/nginx
 # Create logs directory
-RUN mkdir /var/www/app/log
-RUN touch /var/www/app/log/frontend-access.log
+RUN mkdir /var/www/log
+RUN touch /var/www/log/frontend-access.log
 
 # Включаем его
 RUN ln -s /etc/nginx/sites-available/site.conf /etc/nginx/sites-enabled/site.conf

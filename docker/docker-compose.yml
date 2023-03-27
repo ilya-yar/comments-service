@@ -1,5 +1,5 @@
 # версия docker-compose
-version: '3.1'
+version: '3.2'
 
 # Создаем общую сеть deafult для всех контейнеров
 networks:
@@ -26,9 +26,13 @@ services:
       - db
     # Линкуем внешнюю папку с исходниками внутрь
     volumes:
-      - "../app:/home/ilya/testtask/app"
+      - type: bind
+        source: /home/ilya/testtask/app
+        target: /var/www/app/
       # Так же линкуем конфиг для nginx
-      - "./conf/nginx:/etc/nginx/sites-available"
+      - type: bind
+        source: ./conf/nginx
+        target: /etc/nginx/sites-available
   # Контейнер с базой данных
   db:
     image: postgres:13.3
