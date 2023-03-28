@@ -38,7 +38,7 @@ class Comment extends ActiveRecord
     {
         return [
             [['id', 'subject_id'], 'integer'],
-            [['subject', 'username'], 'string'],
+            [['subject', 'username', 'comment'], 'string'],
             [['created_at', 'updated_at'], 'default', 'value' => date('Y-m-d H:i:s')],
             [['created_at', 'updated_at'], 'date', 'format' => 'Y-m-d H:m:s'],
             [['status'], 'in', 'range' => [CommentStatus::getValues()]],

@@ -2,11 +2,14 @@
 
 namespace frontend\controllers;
 
+use common\enums\CommentStatus;
 use Yii;
 use common\models\Comment;
 use common\models\CommentFilter;
+use yii\bootstrap\ActiveForm;
 use yii\web\Controller;
 use yii\filters\AccessControl;
+use yii\web\Response;
 
 /**
  * Comment controller
@@ -50,6 +53,26 @@ class CommentController extends Controller
         return $this->render('index', compact('filter'));
     }
 
+    public function actionCreate()
+    {
+        $model = new Comment();
+        if ($model->load(Yii::$app->request->post())) {
+            $model->status = CommentStatus::NEW;
+            $model->useragent = Yii::$app->request->userAgent;
+            $model->ip = Yii::$app->request->userIP;
+            $model->created_at = date('Y-m-d H:i:s');
+
+            if ($model->save(false)) {
+                Yii::$app->session->setFlash('success', 'Saved successfully!');
+                $this->redirect(['update', 'id' => $model->id]);
+            } else {
+                Yii::$app->session->setFlash('error', 'Saving error!');
+            }
+        }
+
+        return $this->render('create', ['model' => $model]);
+    }
+
     public function actionUpdate(int $id)
     {
         $model = Comment::findOne(['id' => $id]);
@@ -61,7 +84,7 @@ class CommentController extends Controller
         if ($model->load(Yii::$app->request->post())) {
             if ($model->save(false)) {
                 Yii::$app->session->setFlash('success','Saved successfully!');
-                return $this->redirect(\Yii::$app->request->referrer);
+                return $this->redirect(['index']);
             } else {
                 Yii::$app->session->setFlash('error', 'Saving error!');
             }

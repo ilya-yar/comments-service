@@ -19,10 +19,10 @@ class m230326_193259_create_table_comment extends Migration
             'username' => $this->string(),
             'comment' => $this->text()->notNull(),
             'status' => $this->string()->notNull(),
-            'useragent' => $this->string()->notNull(),
-            'ip' => $this->string()->notNull(),
+            'useragent' => $this->string(),
+            'ip' => $this->string(),
             'created_at' => $this->timestamp()->notNull(),
-            'updated_at' => $this->timestamp()->notNull(),
+            'updated_at' => $this->timestamp(),
         ]);
 
     }
