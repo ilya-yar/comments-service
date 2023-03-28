@@ -2,11 +2,10 @@
 
 namespace common\models;
 
-use Yii;
-use yii\base\NotSupportedException;
-use yii\behaviors\TimestampBehavior;
 use yii\db\ActiveRecord;
-use yii\web\IdentityInterface;
+use common\enums\CommentStatus;
+use yii\helpers\Html;
+use yii\helpers\Url;
 
 /**
  * Comment model
@@ -24,11 +23,6 @@ use yii\web\IdentityInterface;
  */
 class Comment extends ActiveRecord
 {
-    const STATUS_DELETED = 0;
-    const STATUS_INACTIVE = 9;
-    const STATUS_ACTIVE = 10;
-
-
     /**
      * {@inheritdoc}
      */
@@ -40,21 +34,14 @@ class Comment extends ActiveRecord
     /**
      * {@inheritdoc}
      */
-    public function behaviors()
-    {
-        return [
-            TimestampBehavior::class,
-        ];
-    }
-
-    /**
-     * {@inheritdoc}
-     */
     public function rules()
     {
         return [
-            ['status', 'default', 'value' => self::STATUS_INACTIVE],
-            ['status', 'in', 'range' => [self::STATUS_ACTIVE, self::STATUS_INACTIVE, self::STATUS_DELETED]],
+            [['id', 'subject_id'], 'integer'],
+            [['subject', 'username'], 'string'],
+            [['created_at', 'updated_at'], 'default', 'value' => date('Y-m-d H:i:s')],
+            [['created_at', 'updated_at'], 'date', 'format' => 'Y-m-d H:m:s'],
+            [['status'], 'in', 'range' => [CommentStatus::getValues()]],
         ];
     }
 
@@ -64,5 +51,30 @@ class Comment extends ActiveRecord
     public function getId()
     {
         return $this->getPrimaryKey();
+    }
+
+    public function getColumns(): array
+    {
+        return [
+            'subject',
+            'subject_id',
+            'username',
+            'created_at',
+            'comment' => [
+                'attribute' => 'comment',
+                'format' => 'raw',
+                'value' => function (Comment $model) {
+                   return substr($model->comment, 0, 150);
+                },
+            ],
+            [
+                'label' => 'actions',
+                'format' => 'raw',
+                'value' => function (Comment $model) {
+                    return Html::a('Update', Url::to(['comment/update', 'id' => $model->id]));
+                },
+                'visible' => !\Yii::$app->user->isGuest
+            ]
+        ];
     }
 }

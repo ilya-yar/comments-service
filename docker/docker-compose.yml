@@ -50,4 +50,6 @@ services:
       POSTGRES_PASSWORD: "root"
     # Линкуем внешнюю папку для хранения БД
     volumes:
-      - "./database:/var/lib/postgres/data"
+      - type: bind
+        source: ./database
+        target: /var/lib/postgres/data
