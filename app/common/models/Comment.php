@@ -71,7 +71,7 @@ class Comment extends ActiveRecord
                 'label' => 'actions',
                 'format' => 'raw',
                 'value' => function (Comment $model) {
-                    return Html::a('Update', Url::to(['comment/update', 'id' => $model->id]));
+                    return Html::a('Update', Url::to(['comments/update', 'id' => $model->id]));
                 },
                 'visible' => !\Yii::$app->user->isGuest
             ]

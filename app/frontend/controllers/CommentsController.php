@@ -6,15 +6,13 @@ use common\enums\CommentStatus;
 use Yii;
 use common\models\Comment;
 use common\models\CommentFilter;
-use yii\bootstrap\ActiveForm;
 use yii\web\Controller;
 use yii\filters\AccessControl;
-use yii\web\Response;
 
 /**
  * Comment controller
  */
-class CommentController extends Controller
+class CommentsController extends Controller
 {
     /**
      * {@inheritdoc}

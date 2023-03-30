@@ -15,6 +15,9 @@ RUN mkdir -p /run/nginx
 # Create logs directory
 RUN mkdir /var/www/log
 RUN touch /var/www/log/frontend-access.log
+RUN touch /var/www/log/frontend-error.log
+RUN touch /var/www/log/api-access.log
+RUN touch /var/www/log/api-error.log
 
 # Включаем его
 RUN ln -s /etc/nginx/sites-available/site.conf /etc/nginx/sites-enabled/site.conf

@@ -3,8 +3,8 @@
 /** @var \yii\web\View $this */
 /** @var string $content */
 
+use api\assets\AppAsset;
 use common\widgets\Alert;
-use frontend\assets\AppAsset;
 use yii\bootstrap5\Breadcrumbs;
 use yii\bootstrap5\Html;
 use yii\bootstrap5\Nav;
@@ -28,21 +28,18 @@ AppAsset::register($this);
 <header>
     <?php
     NavBar::begin([
-        'brandLabel' => 'Comments service',
+        'brandLabel' => Yii::$app->name,
         'brandUrl' => Yii::$app->homeUrl,
         'options' => [
             'class' => 'navbar navbar-expand-md navbar-dark bg-dark fixed-top',
         ],
     ]);
-    $menuItems = [];
-    if (!Yii::$app->user->isGuest) {
-        $menuItems[] = ['label' => 'Comments list', 'url' => ['/comments/index']];
-    }
-    $menuItems []= ['label' => 'Create comment', 'url' => ['/comments/create']];
+    $menuItems = [
+        ['label' => 'Home', 'url' => ['/site/index']],
+    ];
     if (Yii::$app->user->isGuest) {
-        $menuItems[] = ['label' => 'Signup', 'url' => ['/site/signup']];
-    }
-
+        $menuItems[] = ['label' => 'Login', 'url' => ['/site/login']];
+    }     
     echo Nav::widget([
         'options' => ['class' => 'navbar-nav me-auto mb-2 mb-md-0'],
         'items' => $menuItems,
