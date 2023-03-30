@@ -34,7 +34,7 @@ class Comment extends ActiveRecord
     /**
      * {@inheritdoc}
      */
-    public function rules()
+    public function rules(): array
     {
         return [
             [['id', 'subject_id'], 'integer'],
