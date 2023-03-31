@@ -1,0 +1,40 @@
+<?php
+
+return [
+    [
+        'id' => '1',
+        'subject' => 'subject1',
+        'subject_id' => '1',
+        'username' => 'user1',
+        'comment' => 'new comment!',
+        'status' => \common\enums\CommentStatus::NEW,
+        'useragent' => 'Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/102.0.0.0 Safari/537.36',
+        'ip' => '172.21.0.1',
+        'created_at' => '2023-03-28 22:58:44',
+        'updated_at' => '2023-03-28 22:58:44',
+    ],
+    [
+        'id' => '2',
+        'subject' => 'subject1',
+        'subject_id' => '2',
+        'username' => 'user2',
+        'comment' => 'approved comment!',
+        'status' => \common\enums\CommentStatus::APPROVED,
+        'useragent' => 'Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/102.0.0.0 Safari/537.36',
+        'ip' => '172.23.0.1',
+        'created_at' => '2023-03-28 22:58:45',
+        'updated_at' => '2023-03-28 22:58:47',
+    ],
+    [
+        'id' => '3',
+        'subject' => 'subject2',
+        'subject_id' => '2',
+        'username' => 'user2',
+        'comment' => 'deleted comment!',
+        'status' => \common\enums\CommentStatus::REJECTED,
+        'useragent' => 'Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/102.0.0.0 Safari/537.36',
+        'ip' => '172.23.0.1',
+        'created_at' => '2023-03-28 22:58:45',
+        'updated_at' => '2023-03-28 22:58:47',
+    ],
+];
