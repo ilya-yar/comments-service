@@ -9,7 +9,17 @@ use yii\data\ActiveDataProvider;
  */
 class CommentFilter extends Comment
 {
-    public function search()
+    public function rules(): array
+    {
+        return [
+            [['subject_id'], 'integer'],
+            [['subject', 'username'], 'string'],
+            [['created_at'], 'default', 'value' => date('Y-m-d H:i:s')],
+            [['created_at'], 'date', 'format' => 'Y-m-d H:m:s']
+        ];
+    }
+
+    public function search(): ActiveDataProvider
     {
         $query = self::find()
             ->andFilterWhere(['subject' => $this->subject])

@@ -45,6 +45,16 @@ class Comment extends ActiveRecord
         ];
     }
 
+    public function beforeSave($insert): bool
+    {
+        if ($insert) {
+            $this->status = CommentStatus::NEW;
+            $this->created_at = date('Y-m-d H:i:s');
+        }
+        $this->updated_at = date('Y-m-d H:i:s');
+        return parent::beforeSave($insert);
+    }
+
     /**
      * {@inheritdoc}
      */
