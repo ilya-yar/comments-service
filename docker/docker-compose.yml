@@ -27,7 +27,7 @@ services:
     # Линкуем внешнюю папку с исходниками внутрь
     volumes:
       - type: bind
-        source: /home/ilya/testtask/app
+        source: ../app:/var/www/app
         target: /var/www/app/
       # Так же линкуем конфиг для nginx
       - type: bind

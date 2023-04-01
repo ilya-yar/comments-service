@@ -38,7 +38,7 @@ class Comment extends ActiveRecord
     {
         return [
             [['id', 'subject_id'], 'integer'],
-            [['subject', 'username', 'comment'], 'string'],
+            [['subject', 'username', 'comment', 'useragent'], 'string'],
             [['created_at', 'updated_at'], 'default', 'value' => date('Y-m-d H:i:s')],
             [['created_at', 'updated_at'], 'date', 'format' => 'Y-m-d H:m:s'],
             [['status'], 'in', 'range' => [CommentStatus::getValues()]],
@@ -49,7 +49,7 @@ class Comment extends ActiveRecord
     {
         if ($insert) {
             $this->status = CommentStatus::NEW;
-            $this->created_at = date('Y-m-d H:i:s');
+            $this->created_at = $this->created_at ?: date('Y-m-d H:i:s');
         }
         $this->updated_at = date('Y-m-d H:i:s');
         return parent::beforeSave($insert);
