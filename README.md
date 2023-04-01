@@ -48,15 +48,15 @@
 2. Запустить окружение: docker-compose -f docker/docker-compose.yml up -d
 3. Установить нужные пакеты: composer install
 4. Инициализировать проект app/init --env=Development --overwrite=All
-5. Отредактировать файл app/common/config/main-local.php и заполнить данные для подключения к БД:
-   POSTGRES_DB: yii-template-db
-   POSTGRES_USER: "root"
-   POSTGRES_PASSWORD: "root". 
-   host=db.
-   port=5432.
+5. Отредактировать файл app/common/config/main-local.php и заполнить данные для подключения к БД:  
+   POSTGRES_DB: yii-template-db  
+   POSTGRES_USER: "root"  
+   POSTGRES_PASSWORD: "root"  
+   host=db.  
+   port=5432.  
 6. Подключиться к контейнеру docker exec -it docker_app_1 bash 
 7. Выполнить команду миграции БД php /var/www/app/yii migrate
 8. Заполнить таблицу comment тестовыми данными: php /var/www/app/yii fixture/load Comment
-9. Добавить локальные домены в /etc/hosts:
-   127.0.0.1       testtask.loc
-   127.0.0.1       api.testtask.loc
+9. Добавить локальные домены в /etc/hosts:  
+   127.0.0.1       testtask.loc  
+   127.0.0.1       api.testtask.loc  
