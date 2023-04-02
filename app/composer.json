@@ -17,7 +17,10 @@
         "php": ">=7.4.0",
         "yiisoft/yii2": "~2.0.45",
         "yiisoft/yii2-symfonymailer": "~2.0.3",
-        "almasaeed2010/adminlte": "~3.2"
+        "almasaeed2010/adminlte": "^2.4.0",
+        "yiisoft/yii2-bootstrap5": "~2.0.2",
+        "guzzlehttp/guzzle": "^7.5",
+        "electrolinux/phpquery": "^0.9.6"
     },
     "require-dev": {
         "yiisoft/yii2-debug": "~2.1.0",
