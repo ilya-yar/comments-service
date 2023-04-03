@@ -62,3 +62,9 @@
 11. Добавить локальные домены в /etc/hosts:  
    127.0.0.1       testtask.loc  
    127.0.0.1       api.testtask.loc  
+
+## Получение комментариев из Яндкекс маркет
+
+В контейнере app выполнить команду: 
+php /var/www/app/yii parser/yandex https://market.yandex.ru/product--smartfon-realme-10/1772726467/reviews?cpa=1
+В параметре нужно передать ссылку на страницу "Отзывы" для любого товара.

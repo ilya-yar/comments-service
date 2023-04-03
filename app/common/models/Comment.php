@@ -37,6 +37,7 @@ class Comment extends ActiveRecord
     public function rules(): array
     {
         return [
+            [['comment', 'subject', 'subject_id'], 'required'],
             [['id', 'subject_id'], 'integer'],
             [['subject', 'username', 'comment', 'useragent'], 'string'],
             [['created_at', 'updated_at'], 'default', 'value' => date('Y-m-d H:i:s')],

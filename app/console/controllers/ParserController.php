@@ -1,35 +1,13 @@
 <?php
 
 namespace console\controllers;
-use DOMXPath;
-use \GuzzleHttp\Client;
+use common\models\Comment;
 
+use yii\base\Exception;
 use yii\console\Controller;
 
 class ParserController extends Controller
 {
-    public function actionYandex()
-    {
-        $url = 'https://market.yandex.ru/product--smartfon-realme-10/1772726467?glfilter=14871214%3A14899090_101833273729&glfilter=23476910%3A23477050_101833273729&glfilter=25879492%3A26802070_101833273729&cpc=K-GKTEbSYoN0Y2vCFQafeIOThMMWy2nIEFGvRPL_hr-eIgBWGtF8VryUAIjU6RP0ZeU7IIg0XsWbBU7RwvAfITJgKsoiAa_gw90WOcPonBJdPuvOHzvDUDgdR2GMneRce0Efyl5TGvjYJ89lGIY_icZql_Y-fPOj_hHB9cFfUFj25YNeWUr-IMm_xTMXDkb62ERBnfXyg740sypVVVHpWG0vbPQ3koOgQbFeGlN9SyRvRDiV_1EU_g%2C%2C&sku=101833273729&offerid=N0aYPzejamhvwhXPdXDAjw&resale_goods=resale_new&cpa=1';
-
-        $httpClient = new Client([
-            //'base_uri' => 'http://site.com',
-            //'timeout' => 2.0,
-            'headers' => [
-                'User-Agent' => 'Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/111.0.0.0 Safari/537.36',
-                //'test-header' => 'test-value'
-            ]
-        ]);
-        $response = $httpClient->get($url);
-        $htmlString = (string) $response->getBody();
-//add this line to suppress any warnings
-        libxml_use_internal_errors(true);
-        $doc = new \DOMDocument();
-        $doc->loadHTML($htmlString);
-        $xpath = new DOMXPath($doc);
-
-        echo $htmlString;
-    }
 
     /**
      * Сделано на основе поста на хабре:
@@ -38,11 +16,31 @@ class ParserController extends Controller
      *
      * @return void
      */
-    public function actionYandex2()
+    public function actionYandex(string $url)
     {
-        $newUrl = 'https://market.yandex.ru/product--smartfon-samsung-galaxy-a52s/1734794314/reviews?cpa=1';
-        $originUrl = 'https://market.yandex.ru/product--smartfon-realme-10/1772726467/reviews?no-pda-redir=1&sort_by=grade&page=1';
-        // Отзывы подгружаются не через урл
+        $urlParts = parse_url($url);
+
+        if (empty($urlParts['path'])) {
+            throw new Exception('Url path is empty.');
+        }
+        $path = $urlParts['path'];
+
+        if (empty($urlParts['query'])) {
+            throw new Exception('Url query is empty.');
+        }
+        $query = $urlParts['query'];
+
+        $pathParts = explode('/', $path);
+
+        if (count($pathParts) < 4) {
+            throw new Exception('Wrong path.');
+        }
+
+        if (strpos($pathParts[1], 'product--') === false) {
+            throw new Exception('Wrong product name.');
+        }
+        $productName = str_replace('product--', '', $pathParts[1]);
+        $productId = $pathParts[2];
 
         $ch = curl_init();
         curl_setopt($ch, CURLOPT_URL, 'https://market.yandex.ru/api/resolve/?r=reviews/product:resolveProductReviewListState');
@@ -54,7 +52,7 @@ class ParserController extends Controller
             'accept-language: en-US,en;q=0.9',
             'content-type: application/json',
             'origin: https://market.yandex.ru',
-            'referer: '.$newUrl,
+            'referer: '.$url,
             'sec-ch-ua: "Google Chrome";v="111", "Not(A:Brand";v="8", "Chromium";v="111"',
             'sec-ch-ua-mobile: ?1',
             'sec-ch-ua-platform: "Android"',
@@ -65,11 +63,11 @@ class ParserController extends Controller
             'user-agent: Mozilla/5.0 (Linux; Android 6.0; Nexus 5 Build/MRA58N) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/111.0.0.0 Mobile Safari/537.36',
             'x-market-core-service: <UNKNOWN>',
             'x-requested-with: XMLHttpRequest',
-            'x-retpath-y: '.$newUrl,
+            'x-retpath-y: '.$url,
             'accept-encoding: gzip',
         ]);
         curl_setopt($ch, CURLOPT_COOKIE, 'i=F0E+rvrFqiCPBx1IkDZITcD095DBJngBxM6NSvrWmzU6Jrt7FjXFzcOUJvLGottLD1rFDAS9wUnGsKNZkiIECCrX1Aw=; yandexuid=9584339031680537822; yuidss=9584339031680537822; ymex=1995897823.yrts.1680537823; gdpr=0; _ym_uid=1680537824440573705; _ym_d=1680537824; _ym_visorc=w; _ym_isad=2; spravka=dD0xNjgwNTM3ODM3O2k9OTQuMjUuMjM5Ljc0O0Q9RTE5MEVBMzQzOUU1MThFQkNFOTY5NEFBODJCRERBNDQzQjMzQ0IyRDAxRjU1MkY0QUJBRUQ4Qzk0Rjc4MDkzMEU2QjcxM0Q2M0EwMkNGNUI3Njc3QTdERkJBRjY3QjNDO3U9MTY4MDUzNzgzNzQ1ODk1NjkwMztoPTNkOTFjNGVmNDhjYmM5YWM4MTVkNDUxMzZkMGJkNTMw; visits=1680537837-1680537837-1680537837; cmp-merge=true; reviews-merge=true; skid=5104942541680537837; js=1; report_hint=20230403_1416; ugcp=1; nec=0; currentRegionId=16; currentRegionName=%D0%AF%D1%80%D0%BE%D1%81%D0%BB%D0%B0%D0%B2%D0%BB%D1%8C; mOC=1; is_gdpr=0; is_gdpr_b=CPzoGBDTrwE=; bh=EkAiR29vZ2xlIENocm9tZSI7dj0iMTExIiwgIk5vdChBOkJyYW5kIjt2PSI4IiwgIkNocm9taXVtIjt2PSIxMTEiKgI/MToJIkFuZHJvaWQi; _yasc=hXRGk2P02NxiO5Q39LaSf1pqD8mInndChb7j5jKxjPgnawI8a7Cq6sbMf7WKOl58mfec3g==; no-pda-redir=1; parent_reqid_seq=1680537837551%2F0e19dedaacc40006efbdd6b470f80500%2C1680538335648%2F65021ebeef8cae81e71a87d270f80500');
-        curl_setopt($ch, CURLOPT_POSTFIELDS, '{"params":[{"productId":1772726467,"pageNum":1,"withPhoto":false,"restParams":{"slug":"smartfon-realme-10","no-pda-redir":"1"},"sortBy":"date","sortType":"desc"}],"path":"/product--smartfon-realme-10/1772726467/reviews?no-pda-redir=1&sort_by=grade&page=1"}');
+        curl_setopt($ch, CURLOPT_POSTFIELDS, '{"params":[{"productId":'.$productId.',"pageNum":1,"withPhoto":false,"restParams":{"slug":"'.$productName.'","no-pda-redir":"1"},"sortBy":"date","sortType":"desc"}],"path":"'.$path.'?'.$query.'"}');
 
         $response = curl_exec($ch);
 
@@ -78,6 +76,35 @@ class ParserController extends Controller
 
         curl_close($ch);
 
-        print_r($response);
+        try {
+            $data = json_decode($response, true);
+            $comments = $data['results'][0]['data']['collections']['review'];
+            $users = $data['results'][0]['data']['collections']['publicUser'];
+
+            foreach ($comments as $comment) {
+                if (empty($comment['userId'])) {
+                    continue;
+                }
+                if (empty($users[$comment['userId']]['publicDisplayName'])) {
+                    continue;
+                }
+                $model = new Comment([
+                    'subject' => $productName,
+                    'subject_id' => $comment['productId'],
+                    'username' => $users[$comment['userId']]['publicDisplayName'],
+                    'comment' => $comment['comment'],
+                    'created_at' => date('Y-m-d H:i:s', (int)(substr($comment['created'], 0, -3))),
+                ]);
+                if ($model->validate()) {
+                    $model->save();
+                } else {
+                    echo"Comment validation error: ".print_r($model->getErrors(), true);
+                }
+            }
+        }
+        catch (\Throwable $e) {
+            echo "Error while parsing response: ".$e->getMessage();
+            return;
+        }
     }
 }
