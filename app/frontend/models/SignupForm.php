@@ -56,6 +56,9 @@ class SignupForm extends Model
         $user->generateAuthKey();
         $user->generateEmailVerificationToken();
 
+        // FIXME for development only
+        $user->status = User::STATUS_ACTIVE;
+
         return $user->save() && $this->sendEmail($user);
     }
 
