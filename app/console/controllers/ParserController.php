@@ -43,6 +43,7 @@ class ParserController extends Controller
         $productId = $pathParts[2];
 
         $ch = curl_init();
+        // Запрос, который отдает список комментариев
         curl_setopt($ch, CURLOPT_URL, 'https://market.yandex.ru/api/resolve/?r=reviews/product:resolveProductReviewListState');
         curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
         curl_setopt($ch, CURLOPT_CUSTOMREQUEST, 'POST');
