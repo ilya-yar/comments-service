@@ -54,8 +54,8 @@
    POSTGRES_DB: yii-template-db  
    POSTGRES_USER: "root"  
    POSTGRES_PASSWORD: "root"  
-   host=db.  
-   port=5432.  
+   host=db  
+   port=5432  
 8. Подключиться к контейнеру docker exec -it docker_app_1 bash 
 9. Выполнить команду миграции БД php /var/www/app/yii migrate
 10. Заполнить таблицу comment тестовыми данными: php /var/www/app/yii fixture/load Comment
